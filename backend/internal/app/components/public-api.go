@@ -1,7 +1,13 @@
 package components
 
 import (
+	"errors"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"go.uber.org/zap"
+	"net"
+	"net/http"
 	"public-rpc/internal/config"
 )
 
@@ -10,6 +16,48 @@ type PublicAPIComponent struct {
 	Logger *zap.Logger
 }
 
+func (c *PublicAPIComponent) getHandler() http.Handler {
+	r := chi.NewRouter()
+
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Compress(5))
+	r.Use(middleware.Timeout(c.Cfg.Timeout))
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Content-Type"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
+
+	return r
+}
+
+func (c *PublicAPIComponent) getServer(handler http.Handler) http.Server {
+	return http.Server{
+		Addr: net.JoinHostPort(c.Cfg.Host, c.Cfg.Port),
+
+		Handler: handler,
+
+		ReadHeaderTimeout: c.Cfg.Timeout,
+		ReadTimeout:       c.Cfg.Timeout,
+		WriteTimeout:      c.Cfg.Timeout,
+		IdleTimeout:       c.Cfg.Timeout * 10,
+	}
+}
+
 func (c *PublicAPIComponent) Run() error {
-	return nil
+	handler := c.getHandler()
+	server := c.getServer(handler)
+
+	err := server.ListenAndServe()
+
+	if errors.Is(err, http.ErrServerClosed) {
+		return nil
+	}
+
+	return err
 }

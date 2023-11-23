@@ -2,13 +2,15 @@ package app
 
 import (
 	"go.uber.org/zap"
+	"public-rpc/internal/adapters/storage"
 	"public-rpc/internal/app/components"
 	"public-rpc/internal/config"
 )
 
 type Application struct {
-	Config config.Config
-	Logger *zap.Logger
+	Config  config.Config
+	Logger  *zap.Logger
+	Storage *storage.Storage
 }
 
 func (app *Application) RunAdminAPI() error {
