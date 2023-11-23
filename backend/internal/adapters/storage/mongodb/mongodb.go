@@ -3,9 +3,11 @@ package mongodb
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"public-rpc/internal/config"
+	"public-rpc/models"
 	"time"
 )
 
@@ -26,6 +28,35 @@ func (storage *MongoDBStorage) database() *mongo.Database {
 
 func (storage *MongoDBStorage) collection() *mongo.Collection {
 	return storage.database().Collection(storage.Config.MongoDB.Collection)
+}
+
+func (storage *MongoDBStorage) ListRPC() ([]models.RPC, error) {
+	return storage.ListRPCByNetwork("")
+}
+
+func (storage *MongoDBStorage) ListRPCByNetwork(network string) ([]models.RPC, error) {
+	var data []models.RPC
+	query := bson.D{}
+	ctx := context.Background()
+
+	coll := storage.collection()
+
+	if network != "" {
+		query = bson.D{{"network", network}}
+	}
+
+	cur, err := coll.Find(ctx, query)
+
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+
+	if err = cur.All(ctx, &data); err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
 
 func Init(cfg config.StorageConfig) (*MongoDBStorage, error) {

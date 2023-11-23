@@ -14,7 +14,7 @@ func main() {
 		EnableBashCompletion: true,
 		Commands:             []*cli.Command{},
 		Action: func(context *cli.Context) error {
-			cfg, err := config.LoadConfigFromEnv("APP")
+			cfg, err := config.LoadConfigFromEnv("")
 
 			if err != nil {
 				log.Fatal("error to load config: ", err)

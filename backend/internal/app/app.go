@@ -3,7 +3,9 @@ package app
 import (
 	"go.uber.org/zap"
 	"public-rpc/internal/adapters/storage"
-	"public-rpc/internal/app/components"
+	admin_api "public-rpc/internal/app/admin-api"
+	public_api "public-rpc/internal/app/public-api"
+	"public-rpc/internal/app/worker"
 	"public-rpc/internal/config"
 )
 
@@ -14,16 +16,16 @@ type Application struct {
 }
 
 func (app *Application) RunAdminAPI() error {
-	component := components.AdminAPIComponent{Cfg: app.Config.AdminAPIConfig, Logger: app.Logger}
+	component := admin_api.AdminAPIComponent{Cfg: app.Config.AdminAPIConfig, Logger: app.Logger, Storage: app.Storage}
 	return component.Run()
 }
 
 func (app *Application) RunPublicAPI() error {
-	component := components.PublicAPIComponent{Cfg: app.Config.PublicAPIConfig, Logger: app.Logger}
+	component := public_api.PublicAPIComponent{Cfg: app.Config.PublicAPIConfig, Logger: app.Logger, Storage: app.Storage}
 	return component.Run()
 }
 
 func (app *Application) RunWorker() error {
-	component := components.WorkerComponent{Cfg: app.Config.WorkerConfig, Logger: app.Logger}
+	component := worker.WorkerComponent{Cfg: app.Config.WorkerConfig, Logger: app.Logger, Storage: app.Storage}
 	return component.Run()
 }

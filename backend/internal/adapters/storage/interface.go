@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"public-rpc/internal/adapters/storage/mongodb"
 	"public-rpc/internal/config"
+	"public-rpc/models"
 )
 
-type Storage interface{}
+type Storage interface {
+	ListRPC() ([]models.RPC, error)
+	ListRPCByNetwork(network string) ([]models.RPC, error)
+}
 
 func InitializeStorage(cfg config.StorageConfig) (*Storage, error) {
 	var storage Storage

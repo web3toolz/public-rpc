@@ -1,4 +1,4 @@
-package components
+package public_api
 
 import (
 	"errors"
@@ -8,20 +8,23 @@ import (
 	"go.uber.org/zap"
 	"net"
 	"net/http"
+	"public-rpc/internal/adapters/storage"
+	"public-rpc/internal/app/public-api/query"
 	"public-rpc/internal/config"
+	public_api "public-rpc/internal/ports/public-api"
 )
 
 type PublicAPIComponent struct {
-	Cfg    config.PublicAPIConfig
-	Logger *zap.Logger
+	Cfg     config.PublicAPIConfig
+	Logger  *zap.Logger
+	Storage *storage.Storage
 }
 
-func (c *PublicAPIComponent) getHandler() http.Handler {
+func (c *PublicAPIComponent) getHTTPHandler() http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Compress(5))
 	r.Use(middleware.Timeout(c.Cfg.Timeout))
@@ -33,10 +36,14 @@ func (c *PublicAPIComponent) getHandler() http.Handler {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
+	r.Route("/", func(r chi.Router) {
+		r.Get("/", public_api.GetRPCDataHandler(query.NewGetRPCDataHandler(c.Logger, c.Storage)))
+	})
+
 	return r
 }
 
-func (c *PublicAPIComponent) getServer(handler http.Handler) http.Server {
+func (c *PublicAPIComponent) getHTTPServer(handler http.Handler) http.Server {
 	return http.Server{
 		Addr: net.JoinHostPort(c.Cfg.Host, c.Cfg.Port),
 
@@ -50,8 +57,8 @@ func (c *PublicAPIComponent) getServer(handler http.Handler) http.Server {
 }
 
 func (c *PublicAPIComponent) Run() error {
-	handler := c.getHandler()
-	server := c.getServer(handler)
+	handler := c.getHTTPHandler()
+	server := c.getHTTPServer(handler)
 
 	err := server.ListenAndServe()
 

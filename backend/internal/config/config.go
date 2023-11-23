@@ -35,15 +35,15 @@ type MongoDBStorageConfig struct {
 type StorageConfig struct {
 	Type string `envconfig:"STORAGE_TYPE" default:"mongodb"`
 
-	MongoDB MongoDBStorageConfig
+	MongoDB MongoDBStorageConfig `envconfig:""`
 }
 
 type Config struct {
-	LogLevel        string `envconfig:"LOG_LEVEL" default:"info"`
-	PublicAPIConfig PublicAPIConfig
-	AdminAPIConfig  AdminAPIConfig
-	WorkerConfig    WorkerConfig
-	StorageConfig   StorageConfig
+	LogLevel        string          `envconfig:"LOG_LEVEL" default:"info"`
+	PublicAPIConfig PublicAPIConfig `envconfig:""`
+	AdminAPIConfig  AdminAPIConfig  `envconfig:""`
+	WorkerConfig    WorkerConfig    `envconfig:""`
+	StorageConfig   StorageConfig   `envconfig:""`
 }
 
 func LoadConfigFromEnv(prefix string) (*Config, error) {
