@@ -17,7 +17,7 @@ type MongoDBStorage struct {
 }
 
 func (storage *MongoDBStorage) Close() error {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	return storage.client.Disconnect(ctx)
 }
@@ -57,6 +57,57 @@ func (storage *MongoDBStorage) ListRPCByNetwork(network string) ([]models.RPC, e
 	}
 
 	return data, nil
+}
+
+func (storage *MongoDBStorage) GetRPCById(id string) (*models.RPC, error) {
+	var data models.RPC
+	query := bson.D{{"_id", id}}
+	ctx := context.Background()
+
+	coll := storage.collection()
+
+	err := coll.FindOne(ctx, query).Decode(&data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &data, nil
+}
+
+func (storage *MongoDBStorage) GetRPCByHttpOrWs(httpOrWsUrl string) (*models.RPC, error) {
+	var data models.RPC
+	query := bson.D{{"$or", bson.A{
+		bson.D{{"http", httpOrWsUrl}},
+		bson.D{{"ws", httpOrWsUrl}},
+	}}}
+	ctx := context.Background()
+
+	coll := storage.collection()
+
+	err := coll.FindOne(ctx, query).Decode(&data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &data, nil
+}
+
+func (storage *MongoDBStorage) CreateRPC(rpc models.RPC) (*models.RPC, error) {
+	ctx := context.Background()
+
+	coll := storage.collection()
+
+	result, err := coll.InsertOne(ctx, rpc)
+
+	if err != nil {
+		return nil, err
+	}
+
+	rpc.Id = result.InsertedID.(string)
+
+	return &rpc, nil
 }
 
 func Init(cfg config.StorageConfig) (*MongoDBStorage, error) {

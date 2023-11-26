@@ -10,6 +10,10 @@ import (
 type Storage interface {
 	ListRPC() ([]models.RPC, error)
 	ListRPCByNetwork(network string) ([]models.RPC, error)
+	GetRPCById(id string) (*models.RPC, error)
+	GetRPCByHttpOrWs(httpOrWsUrl string) (*models.RPC, error)
+	CreateRPC(rpc models.RPC) (*models.RPC, error)
+	Close() error
 }
 
 func InitializeStorage(cfg config.StorageConfig) (*Storage, error) {

@@ -4,23 +4,19 @@ import (
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"
-	"public-rpc/internal/config"
-	"public-rpc/internal/service"
+	"public-rpc/cmd/cli/loaddata"
+	"public-rpc/cmd/cli/run"
 )
 
 func main() {
 	app := &cli.App{
 		Name:                 "public-rpc",
+		Usage:                "Public RPC cli.",
 		EnableBashCompletion: true,
-		Commands:             []*cli.Command{},
-		Action: func(context *cli.Context) error {
-			cfg, err := config.LoadConfigFromEnv("")
-
-			if err != nil {
-				log.Fatal("error to load config: ", err)
-			}
-
-			return service.RunApplication(*cfg)
+		Suggest:              true,
+		Commands: []*cli.Command{
+			loaddata.Command,
+			run.Command,
 		},
 	}
 

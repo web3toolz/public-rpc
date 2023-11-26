@@ -1,0 +1,10 @@
+# example of data
+- http: "https://eth.llamarpc.com"
+  chain: "ethereum"
+  network: "mainnet"
+- ws: "wss://ethereum.publicnode.com"
+  chain: "ethereum"
+  network: "mainnet"
+- http: "https://rpc.ankr.com/eth"
+  chain: "ethereum"
+  network: "mainnet"
