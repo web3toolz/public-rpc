@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -68,7 +69,9 @@ func (storage *MongoDBStorage) GetRPCById(id string) (*models.RPC, error) {
 
 	err := coll.FindOne(ctx, query).Decode(&data)
 
-	if err != nil {
+	if errors.Is(err, mongo.ErrNoDocuments) {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 
@@ -87,7 +90,9 @@ func (storage *MongoDBStorage) GetRPCByHttpOrWs(httpOrWsUrl string) (*models.RPC
 
 	err := coll.FindOne(ctx, query).Decode(&data)
 
-	if err != nil {
+	if errors.Is(err, mongo.ErrNoDocuments) {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 

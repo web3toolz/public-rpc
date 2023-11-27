@@ -10,6 +10,7 @@ import (
 	"public-rpc/internal/config"
 	"public-rpc/internal/logger"
 	"public-rpc/models"
+	"time"
 )
 
 func loadFileData(filepath string) ([]models.RPC, error) {
@@ -71,13 +72,17 @@ func LoadData(cfg config.Config, filepath string) error {
 
 		rpc.Id = uuid.NewString()
 
+		rpc.AddedAt = time.Now()
+		rpc.Status = models.StatusActive
+
 		rpcInDb, err := storage_.GetRPCByHttpOrWs(httpOrWs)
 
 		if err != nil {
 			logger_.Warn("failed to load rpc from db", zap.String("url", httpOrWs), zap.Any("rpc", rpc))
+			continue
 		}
 
-		if rpcInDb == new(models.RPC) {
+		if rpcInDb != nil {
 			logger_.Info("rpc already exists, skipping", zap.Any("rpc", rpc))
 		} else {
 			_, err = storage_.CreateRPC(rpc)
