@@ -18,6 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
+        env-hash: {{ toString .Values.env | sha256sum | trunc 32 }}
         {{- include "app.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -38,10 +39,12 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
+            initialDelaySeconds: 30
             httpGet:
               path: /
               port: http
           readinessProbe:
+            initialDelaySeconds: 10
             httpGet:
               path: /
               port: http
