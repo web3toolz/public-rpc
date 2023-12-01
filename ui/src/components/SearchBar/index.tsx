@@ -1,14 +1,16 @@
 import * as React from 'react';
 import {useState} from 'react';
 import {TextInput} from '@mantine/core';
-import {PageProps} from "gatsby";
 import * as classes from './searchbar.module.css';
 
+interface SearchBarProps {
+    query: string;
+    setQuery: (query: string) => void;
+}
 
-const SearchBar: React.FC<PageProps> = () => {
+function SearchBar({query, setQuery}: SearchBarProps): React.ReactElement {
     const [focused, setFocused] = useState(false);
-    const [value, setValue] = useState('');
-    const floating = value.trim().length !== 0 || focused || undefined;
+    const floating = (query || "").trim().length !== 0 || focused || undefined;
 
     return (
         <div className="flex justify-center p-10 my-14">
@@ -17,8 +19,8 @@ const SearchBar: React.FC<PageProps> = () => {
                 placeholder="Search for RPCs"
                 className="w-screen lg:w-1/3"
                 classNames={classes}
-                value={value}
-                onChange={(event) => setValue(event.currentTarget.value)}
+                value={query}
+                onChange={(event) => setQuery(event.currentTarget.value)}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
                 mt="md"

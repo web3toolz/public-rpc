@@ -1,7 +1,6 @@
 import * as React from "react";
-import {PageProps} from "gatsby";
-import {Button, Card, CopyButton, TextInput, Group, Text} from '@mantine/core';
-import {Rpc} from "../hooks/fetchRpc";
+import {Button, Card, CopyButton, TextInput, Group, Text, Image} from '@mantine/core';
+import {Rpc} from "../models/rpc"
 import {capitalize, extractHostname} from "../utils";
 
 
@@ -17,7 +16,7 @@ function RpcCard({rpc}: RpcCardProps): React.ReactElement {
 
 
     return (
-        <Card  shadow="sm" padding="lg" radius="md" withBorder>
+        <Card shadow="sm" padding="md" radius="md" withBorder>
             <Group justify="space-between">
                 <Text fw={500}>{title}</Text>
                 <Text>{rpc.status}</Text>
@@ -25,7 +24,7 @@ function RpcCard({rpc}: RpcCardProps): React.ReactElement {
             <Group className="mt-4">
                 <Text>{chain} {network}</Text>
             </Group>
-            <TextInput className="mt-4" value={rpcUrl} disabled/>
+            <TextInput className="mt-4" value={rpcUrl} variant="filled"/>
             <CopyButton value={rpcUrl}>
                 {({copied, copy}) => (
                     <Button className="mt-2" color={copied ? 'teal' : 'blue'} onClick={copy}>

@@ -1,18 +1,7 @@
 import {useEffect, useState} from 'react';
+import {Rpc} from "../models/rpc";
 
 const API_URL = process.env.API_URL || 'https://api-public-rpc.web3toolz.com/';
-
-
-export interface Rpc {
-    id: string;
-    http: string;
-    ws: string;
-    provider: string;
-    chain: string;
-    network: string;
-    status: string;
-    checkedAt: string;
-}
 
 export const useFetchRpcData = () => {
     const [data, setData] = useState<Rpc[]>([]);
@@ -28,7 +17,7 @@ export const useFetchRpcData = () => {
                 }
                 const data: Rpc[] = await response.json();
                 setData(data);
-            } catch (e: Error) {
+            } catch (e: any) {
                 setError(e);
             } finally {
                 setLoading(false);

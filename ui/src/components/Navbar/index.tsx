@@ -30,7 +30,7 @@ export function Navbar(): React.ReactElement {
                 </Group>
 
                 <Group>
-                    <Group ml={50} gap={5} className={classes.links} visibleFrom="sm">
+                    <Group ml={50} gap={5} visibleFrom="sm">
                         {items}
                     </Group>
                 </Group>

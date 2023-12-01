@@ -10,7 +10,7 @@ const links = [
     {link: '#', label: 'Careers'},
 ];
 
-const Footer: React.FC<PageProps> = () => {
+function Footer(): React.ReactElement {
     const items = links.map((link) => (
         <Anchor<'a'>
             c="dimmed"
