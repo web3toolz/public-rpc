@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Rpc} from "../models/rpc";
 
-const API_URL = process.env.API_URL || 'https://api-public-rpc.web3toolz.com/';
+const API_URL: string = process.env.GATSBY_API_URL || 'https://api-public-rpc.web3toolz.com/';
 
 export const useFetchRpcData = () => {
     const [data, setData] = useState<Rpc[]>([]);

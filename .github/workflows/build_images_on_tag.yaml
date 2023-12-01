@@ -33,13 +33,13 @@ jobs:
           push: true
           tags: web3toolz/public-rpc-backend:${{ env.TAG_NAME }}
 
-#      - name: Build and push UI
-#        uses: docker/build-push-action@v2
-#        with:
-#          context: ./ui
-#          file: ./ui/Dockerfile
-#          push: true
-#          tags: web3toolz/gasprice-ui:${{ env.TAG_NAME }}
-#          build-args: |
-#            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
-#            NEXT_PUBLIC_GTAG_ID=${{ vars.NEXT_PUBLIC_GTAG_ID }}
+      - name: Build and push UI
+        uses: docker/build-push-action@v2
+        with:
+          context: ./ui
+          file: ./ui/Dockerfile
+          push: true
+          tags: web3toolz/public-rpc-ui:${{ env.TAG_NAME }}
+          build-args: |
+            GATSBY_API_URL=${{ vars.GATSBY_API_URL }}
+            GATSBY_GTAG_ID=${{ vars.GATSBY_GTAG_ID }}
