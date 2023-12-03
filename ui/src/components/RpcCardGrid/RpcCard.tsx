@@ -2,8 +2,6 @@ import * as React from "react";
 import {Button, Card, CopyButton, TextInput, Group, Text, ColorSwatch, Tooltip} from '@mantine/core';
 import {Rpc} from "../../models/rpc"
 import {capitalize, extractHostname} from "../../utils";
-import {StringMap} from "../../types";
-
 
 interface RpcCardProps {
     rpc: Rpc;
