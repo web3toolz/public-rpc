@@ -19,6 +19,7 @@ type RPC struct {
 
 	Status Status `json:"status" bson:"status"`
 
+	ChainId string `json:"chainId" bson:"chainId"`
 	Chain   string `json:"chain" bson:"chain"`
 	Network string `json:"network" bson:"network"`
 

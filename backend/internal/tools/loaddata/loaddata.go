@@ -73,6 +73,7 @@ func LoadData(cfg config.Config, filepath string) error {
 		rpc.Id = uuid.NewString()
 
 		rpc.AddedAt = time.Now()
+		rpc.CheckedAt = time.Now()
 		rpc.Status = models.StatusActive
 
 		rpcInDb, err := storage_.GetRPCByHttpOrWs(httpOrWs)
