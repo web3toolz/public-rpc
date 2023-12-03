@@ -1,9 +1,10 @@
 import * as React from "react"
 import {useState} from "react"
-import type {HeadFC, PageProps} from "gatsby"
+import type {PageProps} from "gatsby"
 import {useDebouncedValue} from "@mantine/hooks";
+import {Title, Center, Container} from "@mantine/core";
 
-import RpcCardsGrid from "../components/RpcCardsGrid";
+import RpcCardsGrid from "../components/RpcCardGrid/RpcCardsGrid";
 import SearchBar from "../components/SearchBar";
 import Navbar from "../components/Navbar/index";
 import Footer from "../components/Footer/index";
@@ -14,7 +15,6 @@ import {useFilterRpcData} from "../hooks/filterRpc";
 
 const pageStyles = {
     backgroundColor: "rgb(245 245 245/var(--tw-bg-opacity))",
-    fontFamily: "-apple-system, Roboto, sans-serif, serif",
 }
 
 const IndexPage: React.FC<PageProps> = () => {
@@ -22,17 +22,20 @@ const IndexPage: React.FC<PageProps> = () => {
     const [queryDebounced] = useDebouncedValue(query, 200);
     const {data, loading, error,} = useFetchRpcData();
     const filteredData: Rpc[] = useFilterRpcData(data, queryDebounced);
+    const titleText: string = "Find free RPC endpoint for any blockchain";
+
 
     return (
-        <main style={pageStyles}>
-            <Navbar/>
+        <Container fluid h={100} style={pageStyles}>
+            {/*<Navbar/>*/}
+            <Center className="my-10 text-center">
+                <Title order={1}>{titleText}</Title>
+            </Center>
             <SearchBar query={query} setQuery={setQuery}/>
             <RpcCardsGrid rpcData={filteredData}/>
-            <Footer/>
-        </main>
+            {/*<Footer/>*/}
+        </Container>
     )
 }
 
 export default IndexPage
-
-export const Head: HeadFC = () => <title>Public RPC | Web3toolz</title>

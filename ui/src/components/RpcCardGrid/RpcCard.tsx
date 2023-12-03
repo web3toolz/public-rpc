@@ -1,25 +1,45 @@
 import * as React from "react";
-import {Button, Card, CopyButton, TextInput, Group, Text, Image} from '@mantine/core';
-import {Rpc} from "../models/rpc"
-import {capitalize, extractHostname} from "../utils";
+import {Button, Card, CopyButton, TextInput, Group, Text, ColorSwatch, Tooltip} from '@mantine/core';
+import {Rpc} from "../../models/rpc"
+import {capitalize, extractHostname} from "../../utils";
+import {StringMap} from "../../types";
 
 
 interface RpcCardProps {
     rpc: Rpc;
 }
 
+const statusColorMap: StringMap = {
+    active: "#7CFC00",
+    inactive: "red",
+}
+
+const statusLabelMap: StringMap = {
+    active: "Active",
+    inactive: "Inactive",
+}
+
+
 function RpcCard({rpc}: RpcCardProps): React.ReactElement {
     const rpcUrl = rpc.http || rpc.ws;
     const title = extractHostname(rpcUrl);
     const chain = capitalize(rpc.chain);
     const network = capitalize(rpc.network);
+    const status = rpc.status;
+
+    const statusColor: string | undefined = statusColorMap[status];
+    const statusLabel: string | undefined = statusLabelMap[status];
 
 
     return (
         <Card shadow="sm" padding="md" radius="md" withBorder>
             <Group justify="space-between">
-                <Text fw={500}>{title}</Text>
-                <Text>{rpc.status}</Text>
+                <Text fw={600}>{title}</Text>
+                {statusColor &&
+                    <Tooltip label={statusLabel}>
+                        <ColorSwatch color={statusColor} size={18}/>
+                    </Tooltip>
+                }
             </Group>
             <Group className="mt-4">
                 <Text>{chain} {network}</Text>

@@ -13,8 +13,10 @@ function SearchBar({query, setQuery}: SearchBarProps): React.ReactElement {
     const floating = (query || "").trim().length !== 0 || focused || undefined;
 
     return (
-        <div className="flex justify-center p-10 my-14">
+        <div className="flex justify-center mt-10 mb-20 px-5">
             <TextInput
+                size="md"
+                radius="lg"
                 label="Search for RPCs"
                 placeholder="Search for RPCs"
                 className="w-screen lg:w-1/3"

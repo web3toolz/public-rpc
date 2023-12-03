@@ -2,8 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from 'react';
 import RpcCard from "./RpcCard";
 import {Group, Pagination, SimpleGrid} from '@mantine/core';
-import {Rpc} from "../models/rpc";
-import {serialize} from "v8";
+import {Rpc} from "../../models/rpc";
 
 
 interface RpcCardGridProps {
@@ -28,14 +27,14 @@ function RpcCardGrid({rpcData}: RpcCardGridProps): React.ReactElement {
     }, [rpcData])
 
     return (
-        <>
-            <SimpleGrid className="px-10 mb-20" cols={gridParams} spacing="lg">
+        <div className="px-5 mb-10">
+            <SimpleGrid className="mb-10" cols={gridParams} spacing="lg">
                 {cards.length > 0 ? cards : <p>No RPCs found</p>}
             </SimpleGrid>
             <Group justify="center">
                 <Pagination size="lg" total={totalPages} value={activePage} onChange={setPage}/>
             </Group>
-        </>
+        </div>
     )
 }
 
