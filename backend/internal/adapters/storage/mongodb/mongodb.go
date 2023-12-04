@@ -32,15 +32,19 @@ func (storage *MongoDBStorage) collection() *mongo.Collection {
 }
 
 func (storage *MongoDBStorage) ListRPC() ([]models.RPC, error) {
-	return storage.ListRPCByNetwork("")
+	return storage.ListRPCWithFilters("", "")
 }
 
-func (storage *MongoDBStorage) ListRPCByNetwork(network string) ([]models.RPC, error) {
+func (storage *MongoDBStorage) ListRPCWithFilters(chain string, network string) ([]models.RPC, error) {
 	var data []models.RPC
 	query := bson.D{}
 	ctx := context.Background()
 
 	coll := storage.collection()
+
+	if chain != "" {
+		query = bson.D{{"chain", chain}}
+	}
 
 	if network != "" {
 		query = bson.D{{"network", network}}

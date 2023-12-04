@@ -13,10 +13,9 @@ func GetRPCDataHandler(handler query.GetRPCDataHandler) func(w http.ResponseWrit
 		var err error
 		ctx := r.Context()
 
-		handler.Logger.Info("", zap.Any("query", r.URL.Query()))
+		handler.Logger.Info("GetRPCDataHandler", zap.Any("query", r.URL.Query()))
 
-		network := r.URL.Query().Get("network")
-		q := query.GetRPCDataQuery{Network: network}
+		q := query.GetRPCDataQuery{Chain: r.URL.Query().Get("chain"), Network: r.URL.Query().Get("network")}
 
 		rpcData, err := handler.Handle(ctx, q)
 
@@ -29,6 +28,10 @@ func GetRPCDataHandler(handler query.GetRPCDataHandler) func(w http.ResponseWrit
 			render.Status(r, http.StatusInternalServerError)
 			render.JSON(w, r, httpErr)
 		} else {
+			if rpcData == nil {
+				rpcData = make([]models.RPC, 0)
+			}
+
 			render.JSON(w, r, rpcData)
 		}
 	}

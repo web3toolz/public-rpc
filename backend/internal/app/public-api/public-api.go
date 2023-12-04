@@ -8,16 +8,18 @@ import (
 	"go.uber.org/zap"
 	"net"
 	"net/http"
+	"public-rpc/internal/adapters/cache"
 	"public-rpc/internal/adapters/storage"
 	"public-rpc/internal/app/public-api/query"
 	"public-rpc/internal/config"
-	public_api "public-rpc/internal/ports/public-api"
+	publicapi "public-rpc/internal/ports/public-api"
 )
 
 type PublicAPIComponent struct {
 	Cfg     config.PublicAPIConfig
 	Logger  *zap.Logger
 	Storage *storage.Storage
+	Cache   cache.Cache
 }
 
 func (c *PublicAPIComponent) getHTTPHandler() http.Handler {
@@ -37,7 +39,7 @@ func (c *PublicAPIComponent) getHTTPHandler() http.Handler {
 	}))
 
 	r.Route("/", func(r chi.Router) {
-		r.Get("/", public_api.GetRPCDataHandler(query.NewGetRPCDataHandler(c.Logger, c.Storage)))
+		r.Get("/", publicapi.GetRPCDataHandler(query.NewGetRPCDataHandler(c.Logger, c.Storage, c.Cache)))
 	})
 
 	return r
