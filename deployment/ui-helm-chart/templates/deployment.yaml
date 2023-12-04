@@ -38,10 +38,16 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            timeoutSeconds: 30
             httpGet:
               path: /
               port: http
           readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            timeoutSeconds: 30
             httpGet:
               path: /
               port: http
