@@ -1,5 +1,6 @@
 import {Center, Container, Title} from "@mantine/core";
 import Footer from "@/components/Footer";
+import Head from "next/head";
 import * as React from "react";
 import {capitalize} from "@/utils";
 import {Rpc} from "@/models/rpc";
@@ -11,6 +12,21 @@ interface ChainPageProps {
     chain?: string,
     data: Rpc[],
     error: any,
+}
+
+function getMetadata(chain: string): React.ReactElement {
+    chain = capitalize(chain);
+    const title: string = `Free RPC endpoint for ${chain} | Web3toolz.com`;
+    const description: string = `Free RPC endpoint for ${chain} chain. Find free RPC endpoint for ${chain} chain`;
+    const keywords: string = `${chain}, RPC, EVM, Blockchain, Gas Price, Web3, Ethereum, BNB, Polygon, Optimism, Avalanche`;
+
+    return (
+        <Head>
+            <title>{title}</title>
+            <meta name="description" content={description}/>
+            <meta name="keywords" content={keywords}/>
+        </Head>
+    )
 }
 
 export async function getStaticPaths() {
@@ -74,12 +90,15 @@ export default function ChainPage({data, error, chain}: ChainPageProps) {
     const titleText = `Free RPC endpoint for ${capitalize(chain || "")} chain`;
 
     return (
-        <Container fluid h={100}>
-            <Center className="my-10 text-center">
-                <Title order={1}>{titleText}</Title>
-            </Center>
-            <RpcCardsGrid rpcData={rpcData}/>
-            <Footer/>
-        </Container>
+        <>
+            {getMetadata(chain || "")}
+            <Container fluid h={100}>
+                <Center className="my-10 text-center">
+                    <Title order={1}>{titleText}</Title>
+                </Center>
+                <RpcCardsGrid rpcData={rpcData}/>
+                <Footer/>
+            </Container>
+        </>
     )
 }
