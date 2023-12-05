@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useState} from 'react';
 import {TextInput} from '@mantine/core';
-import "./searchbar.module.css"
+import classes from './searchbar.module.css';
 
 interface SearchBarProps {
     query: string;
@@ -17,7 +17,9 @@ function SearchBar({query, setQuery}: SearchBarProps): React.ReactElement {
             <TextInput
                 size="md"
                 radius="lg"
+                label="Search for RPCs"
                 placeholder="Search for RPCs"
+                classNames={classes}
                 className="root w-screen lg:w-1/3"
                 value={query}
                 onChange={(event) => setQuery(event.currentTarget.value)}
@@ -33,4 +35,4 @@ function SearchBar({query, setQuery}: SearchBarProps): React.ReactElement {
     )
 }
 
-export default SearchBar
+export default SearchBar;

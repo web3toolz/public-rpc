@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Card, ColorSwatch, CopyButton, Group, Text, TextInput, Tooltip} from '@mantine/core';
+import {Anchor, Button, Card, ColorSwatch, CopyButton, Group, Text, TextInput, Tooltip} from '@mantine/core';
 import {Rpc} from "@/models/rpc"
 import {capitalize, extractHostname} from "@/utils";
 
@@ -28,6 +28,8 @@ function RpcCard({rpc}: RpcCardProps): React.ReactElement {
     const statusColor: string | undefined = statusColorMap[status];
     const statusLabel: string | undefined = statusLabelMap[status];
 
+    const getChainPageUrl = (): string => (`/chain/${rpc.chain}`)
+
 
     return (
         <Card shadow="sm" padding="md" radius="md" withBorder>
@@ -40,12 +42,14 @@ function RpcCard({rpc}: RpcCardProps): React.ReactElement {
                 }
             </Group>
             <Group className="mt-4">
-                <Text>{chain} {network}</Text>
+                <Anchor href={getChainPageUrl()} c="black" underline="always">
+                    <Text>{chain} {network}</Text>
+                </Anchor>
             </Group>
-            <TextInput className="mt-4" value={rpcUrl} variant="filled"/>
+            <TextInput className="mt-4" defaultValue={rpcUrl} variant="filled"/>
             <CopyButton value={rpcUrl}>
                 {({copied, copy}) => (
-                    <Button className="mt-2" color={copied ? 'teal' : 'blue'} onClick={copy}>
+                    <Button className="mt-2" color={copied ? 'teal' : ''} onClick={copy}>
                         {copied ? 'Copied' : 'Copy URL'}
                     </Button>
                 )}

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint"
   },
@@ -12,7 +13,10 @@
     "@mantine/core": "^7.2.2",
     "@mantine/hooks": "^7.2.2",
     "@mantine/notifications": "^7.3.0",
+    "@tabler/icons-react": "^2.42.0",
+    "axios": "^1.6.2",
     "next": "14.0.3",
+    "next-sitemap": "^4.2.3",
     "react": "^18",
     "react-dom": "^18"
   },

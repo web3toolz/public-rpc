@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://public-rpc.web3toolz.com
+
+# Sitemaps
+Sitemap: https://public-rpc.web3toolz.com/sitemap.xml

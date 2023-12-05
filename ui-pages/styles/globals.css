@@ -4,4 +4,23 @@
 
 body {
   font-family: "Open Sans", sans-serif;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(245,247,250);
+  background: linear-gradient(156deg, rgba(245,247,250,1) 29%, rgba(195,207,226,1) 72%);
+  background-attachment:fixed;
+  background-size: cover;
+
+
+  --powder-blue: #afc2d5ff;
+  --honeydew: #ccddd3ff;
+  --nyanza: #dfefcaff;
+  --vanilla: #fff9a5ff;
+  --rose-ebony: #63474dff;
+
+  --powder-blue: hsla(210, 31%, 76%, 1);
+  --honeydew: hsla(145, 20%, 83%, 1);
+  --nyanza: hsla(86, 54%, 86%, 1);
+  --vanilla: hsla(56, 100%, 82%, 1);
+  --rose-ebony: hsla(347, 16%, 33%, 1);
 }
