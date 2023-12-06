@@ -1,7 +1,7 @@
 import {Rpc} from "@/models/rpc";
 import axios, {AxiosResponse} from "axios";
 
-const API_URL: string = process.env.API_URL || 'https://api-public-rpc.web3toolz.com';
+const API_URL: string = process.env.NEXT_PUBLIC_API_URL || 'https://api-public-rpc.web3toolz.com';
 
 
 export async function fetchRpcData({chain, network}: { chain?: string, network?: string }): Promise<Rpc[]> {

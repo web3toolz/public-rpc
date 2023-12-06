@@ -8,17 +8,18 @@ RUN yarn install --frozen-lockfile --non-interactive
 
 COPY . /home/app
 
-ARG GATSBY_API_URL
-ARG GATSBY_GTAG_ID
-ENV GATSBY_API_URL $GATSBY_API_URL
-ENV GATSBY_GTAG_ID $GATSBY_GTAG_ID
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_GTAG_ID
+ENV NEXT_PUBLIC_API_URL $NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_GTAG_ID $NEXT_PUBLIC_GTAG_ID
+
 ENV NODE_ENV production
 
 RUN yarn build
 
 FROM nginx:alpine
 
-COPY --from=builder /home/app/public /usr/share/nginx/html
+COPY --from=builder /home/app/out /usr/share/nginx/html
 
 RUN rm /etc/nginx/conf.d/default.conf
 

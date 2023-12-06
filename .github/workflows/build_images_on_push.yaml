@@ -37,5 +37,6 @@ jobs:
           push: true
           tags: web3toolz/public-rpc-ui:latest
           build-args: |
-            GATSBY_API_URL=${{ vars.GATSBY_API_URL }}
-            GATSBY_GTAG_ID=${{ vars.GATSBY_GTAG_ID }}
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_GTAG_ID=${{ vars.NEXT_PUBLIC_GTAG_ID }}
+

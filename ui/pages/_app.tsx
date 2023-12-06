@@ -9,8 +9,6 @@ import React from "react";
 import Script from "next/script";
 
 const gtagId: string | undefined = process.env.NEXT_PUBLIC_GTAG_ID;
-
-
 function gtagScript(): React.ReactElement {
     if (gtagId) {
         return (
