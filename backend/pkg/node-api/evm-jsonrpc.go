@@ -1,9 +1,11 @@
 package node_api
 
+import "net/http"
+
 type EVMNodeAPI struct {
 }
 
-func (n EVMNodeAPI) Fetch() (*NodeAPIResult, error) {
+func (n EVMNodeAPI) Fetch(client *http.Client, url string) (*NodeAPIResult, error) {
 	return &NodeAPIResult{
 		LatestBlock:          0,
 		LatestBlockTimestamp: 0,

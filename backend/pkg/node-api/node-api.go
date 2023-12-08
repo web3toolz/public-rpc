@@ -2,15 +2,34 @@ package node_api
 
 import (
 	"fmt"
+	"go.uber.org/zap"
+	"net/http"
 )
 
 type NodeAPIResult struct {
+	Alive                bool
 	LatestBlock          int64
 	LatestBlockTimestamp int64
 }
 
 type INodeAPI interface {
-	Fetch() (*NodeAPIResult, error)
+	Fetch(client *http.Client, url string) (*NodeAPIResult, error)
+}
+
+func NewNodeApiFromUrl(logger *zap.Logger, http string, ws string) (INodeAPI, error) {
+	var nodeApi INodeAPI
+
+	if http != "" {
+		nodeApi = SimpleHTTPAPI{Logger: logger}
+	} else if ws != "" {
+		nodeApi = SimpleWSAPI{Logger: logger}
+	}
+
+	if nodeApi != nil {
+		return nodeApi, nil
+	} else {
+		return nil, fmt.Errorf("no node api found")
+	}
 }
 
 func NewNodeApiFromChain(chain string) (*INodeAPI, error) {

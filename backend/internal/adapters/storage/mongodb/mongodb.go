@@ -119,6 +119,24 @@ func (storage *MongoDBStorage) CreateRPC(rpc models.RPC) (*models.RPC, error) {
 	return &rpc, nil
 }
 
+func (storage *MongoDBStorage) UpdateRPC(rpc models.RPC) error {
+	ctx := context.Background()
+
+	coll := storage.collection()
+
+	result, err := coll.UpdateByID(ctx, rpc.Id, bson.M{"$set": rpc})
+
+	if err != nil {
+		return err
+	}
+
+	if result.MatchedCount == 0 {
+		return fmt.Errorf("rpc with id %s not found", rpc.Id)
+	}
+
+	return nil
+}
+
 func Init(cfg config.StorageConfig) (*MongoDBStorage, error) {
 	if cfg.MongoDB.Uri == "" {
 		return nil, fmt.Errorf("mongodb uri is required")

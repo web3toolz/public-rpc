@@ -13,6 +13,7 @@ type Storage interface {
 	GetRPCById(id string) (*models.RPC, error)
 	GetRPCByHttpOrWs(httpOrWsUrl string) (*models.RPC, error)
 	CreateRPC(rpc models.RPC) (*models.RPC, error)
+	UpdateRPC(rpc models.RPC) error
 	Close() error
 }
 

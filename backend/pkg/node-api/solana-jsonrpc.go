@@ -1,9 +1,11 @@
 package node_api
 
+import "net/http"
+
 type SolanaNodeAPI struct {
 }
 
-func (n SolanaNodeAPI) Fetch() (*NodeAPIResult, error) {
+func (n SolanaNodeAPI) Fetch(client *http.Client, url string) (*NodeAPIResult, error) {
 	return &NodeAPIResult{
 		LatestBlock:          0,
 		LatestBlockTimestamp: 0,
