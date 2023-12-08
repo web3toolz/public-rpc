@@ -30,7 +30,7 @@ func loadFileData(filepath string) ([]models.RPC, error) {
 	return data, nil
 }
 
-func LoadData(cfg config.Config, filepath string) error {
+func LoadData(cfg config.Config, filepath string, dryRun bool) error {
 
 	logger_, loggerCleanup := logger.New(cfg.LogLevel)
 	defer loggerCleanup()
@@ -85,6 +85,9 @@ func LoadData(cfg config.Config, filepath string) error {
 
 		if rpcInDb != nil {
 			logger_.Info("rpc already exists, skipping", zap.Any("rpc", rpc))
+		} else if dryRun == true {
+			logger_.Info("dry run, skipping creation", zap.Any("rpc", rpc))
+			counter += 1
 		} else {
 			_, err = storage_.CreateRPC(rpc)
 

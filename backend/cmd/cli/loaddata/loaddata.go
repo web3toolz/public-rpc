@@ -16,6 +16,11 @@ var Command = &cli.Command{
 			Value:   "rpc-data.yaml",
 			Usage:   "Load data to storage from `FILE`",
 		},
+		&cli.BoolFlag{
+			Name:  "dry-run",
+			Value: false,
+			Usage: "Run as dry run",
+		},
 	},
 	Action: func(cliCtx *cli.Context) error {
 		cfg, err := config.LoadConfigFromEnv("")
@@ -30,7 +35,9 @@ var Command = &cli.Command{
 			return cli.Exit("file is required", 1)
 		}
 
-		err = loaddata.LoadData(*cfg, filepath)
+		dryRun := cliCtx.Bool("dry-run")
+
+		err = loaddata.LoadData(*cfg, filepath, dryRun)
 
 		if err != nil {
 			return cli.Exit(err, 1)
