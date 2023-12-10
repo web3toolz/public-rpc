@@ -4,6 +4,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"
+	"public-rpc/cmd/cli/dumpdata"
 	"public-rpc/cmd/cli/loaddata"
 	"public-rpc/cmd/cli/run"
 )
@@ -16,6 +17,7 @@ func main() {
 		Suggest:              true,
 		Commands: []*cli.Command{
 			loaddata.Command,
+			dumpdata.Command,
 			run.Command,
 		},
 	}

@@ -10,6 +10,7 @@ import (
 	"public-rpc/internal/config"
 	"public-rpc/internal/logger"
 	"public-rpc/models"
+	"strings"
 	"time"
 )
 
@@ -57,6 +58,11 @@ func LoadData(cfg config.Config, filepath string, dryRun bool) error {
 	httpOrWs := ""
 
 	for _, rpc := range loadedDataFromFile {
+		rpc.Chain = strings.ToLower(strings.Trim(rpc.Chain, " "))
+		rpc.Network = strings.ToLower(strings.Trim(rpc.Network, " "))
+		rpc.HTTP = strings.ToLower(strings.TrimRight(rpc.HTTP, "/"))
+		rpc.WS = strings.ToLower(strings.TrimRight(rpc.WS, "/"))
+
 		if rpc.HTTP != "" {
 			httpOrWs = rpc.HTTP
 		} else if rpc.WS != "" {

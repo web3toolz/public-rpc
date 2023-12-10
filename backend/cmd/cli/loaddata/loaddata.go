@@ -8,7 +8,7 @@ import (
 
 var Command = &cli.Command{
 	Name:  "loaddata",
-	Usage: "Load data from yaml to database",
+	Usage: "Load data from yaml to storage",
 	Flags: []cli.Flag{
 		&cli.StringFlag{
 			Name:    "file",
