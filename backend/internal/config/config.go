@@ -22,8 +22,9 @@ type AdminAPIConfig struct {
 }
 
 type WorkerConfig struct {
-	Enable   bool          `envconfig:"WORKER_ENABLE" default:"true"`
-	Interval time.Duration `envconfig:"WORKER_INTERVAL" default:"10s"`
+	Enable      bool          `envconfig:"WORKER_ENABLE" default:"true"`
+	Interval    time.Duration `envconfig:"WORKER_INTERVAL" default:"10s"`
+	Concurrency int           `envconfig:"WORKER_CONCURRENCY" default:"10"`
 }
 
 type MongoDBStorageConfig struct {

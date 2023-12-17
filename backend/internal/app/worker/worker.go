@@ -8,16 +8,27 @@ import (
 	"public-rpc/internal/config"
 	"public-rpc/models"
 	nodeapi "public-rpc/pkg/node-api"
+	"public-rpc/pkg/semaphore"
 	"time"
 )
 
 type WorkerComponent struct {
-	Cfg     config.WorkerConfig
-	Logger  *zap.Logger
-	Storage *storage.Storage
+	Cfg       config.WorkerConfig
+	Logger    *zap.Logger
+	Storage   *storage.Storage
+	semaphore *semaphore.Semaphore
 }
 
-func (c *WorkerComponent) RunJob(client *http.Client, rpc *models.RPC, waitTime time.Duration) {
+func NewWorkerComponent(cfg config.WorkerConfig, logger *zap.Logger, storage *storage.Storage) (*WorkerComponent, error) {
+	return &WorkerComponent{
+		Cfg:       cfg,
+		Logger:    logger,
+		Storage:   storage,
+		semaphore: semaphore.NewSemaphore(cfg.Concurrency),
+	}, nil
+}
+
+func (c *WorkerComponent) RunJob(client *http.Client, rpc models.RPC, waitTime time.Duration) {
 	c.Logger.Debug("job started", zap.String("rpc", rpc.Id))
 	c.Logger.Debug("sleeping", zap.String("rpc", rpc.Id), zap.Duration("duration", waitTime))
 	time.Sleep(waitTime)
@@ -44,7 +55,7 @@ func (c *WorkerComponent) RunJob(client *http.Client, rpc *models.RPC, waitTime 
 	result, err := nodeApi.Fetch(client, url)
 
 	if err != nil {
-		c.Logger.Error("failed to fetch node", zap.Error(err))
+		c.Logger.Error("failed to fetch node", zap.Error(err), zap.Any("rpc", rpc))
 		return
 	}
 
@@ -59,7 +70,7 @@ func (c *WorkerComponent) RunJob(client *http.Client, rpc *models.RPC, waitTime 
 
 	storage_ := *c.Storage
 
-	err = storage_.UpdateRPC(*rpc)
+	err = storage_.UpdateRPC(rpc)
 
 	if err != nil {
 		c.Logger.Error("failed to update rpc", zap.Error(err))
@@ -71,7 +82,6 @@ func (c *WorkerComponent) RunJob(client *http.Client, rpc *models.RPC, waitTime 
 
 func (c *WorkerComponent) ScheduleJobs() {
 	c.Logger.Info("starting new iterator of worker")
-	client := http.Client{Timeout: time.Second * 5}
 	storage_ := *c.Storage
 
 	rpcList, err := storage_.ListRPC()
@@ -82,9 +92,18 @@ func (c *WorkerComponent) ScheduleJobs() {
 	}
 
 	for _, rpc := range rpcList {
-		// get random sleep time from 0 to 10 secs
-		waitTime := rand.Intn(10000)
-		go c.RunJob(&client, &rpc, time.Millisecond*time.Duration(waitTime))
+		if rpc.HTTP != "" {
+			continue
+		}
+		c.semaphore.Acquire()
+		rpc := rpc
+		go func() {
+			// get random sleep time from 0 to 10 secs
+			waitTime := rand.Intn(10000)
+			client := http.Client{Timeout: time.Second * 5}
+			c.RunJob(&client, rpc, time.Millisecond*time.Duration(waitTime))
+			c.semaphore.Release()
+		}()
 	}
 
 	c.Logger.Debug("jobs scheduled", zap.Int("count", len(rpcList)))

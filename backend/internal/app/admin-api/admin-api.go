@@ -12,6 +12,10 @@ type AdminAPIComponent struct {
 	Storage *storage.Storage
 }
 
+func NewAdminAPIComponent(cfg config.AdminAPIConfig, logger *zap.Logger, storage *storage.Storage) (*AdminAPIComponent, error) {
+	return &AdminAPIComponent{Cfg: cfg, Logger: logger, Storage: storage}, nil
+}
+
 func (c *AdminAPIComponent) Run() error {
 	return nil
 }

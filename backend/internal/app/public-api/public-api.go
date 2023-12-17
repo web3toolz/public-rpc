@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"public-rpc/internal/adapters/cache"
+	"public-rpc/internal/adapters/cache/memory"
 	"public-rpc/internal/adapters/storage"
 	"public-rpc/internal/app/public-api/query"
 	"public-rpc/internal/config"
@@ -20,6 +21,16 @@ type PublicAPIComponent struct {
 	Logger  *zap.Logger
 	Storage *storage.Storage
 	Cache   cache.Cache
+}
+
+func NewPublicAPIComponent(cfg config.PublicAPIConfig, logger *zap.Logger, storage *storage.Storage) (*PublicAPIComponent, error) {
+	cache_, err := memory.Init()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &PublicAPIComponent{Cfg: cfg, Logger: logger, Storage: storage, Cache: cache_}, nil
 }
 
 func (c *PublicAPIComponent) getHTTPHandler() http.Handler {
